@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>TheElm.Services</RootNamespace>
+        
+        <AssemblyName>TheElm.Services</AssemblyName>
+        <OutputType>Library</OutputType>
+        
+        <!-- NuGet -->
+        <PackageId>TheElm.Services</PackageId>
+        <Version>1.1.0</Version>
+        
+        <PublishRelease>true</PublishRelease>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        
+        <!-- Package Information -->
+        <ProductName>TheElm.Services</ProductName>
+        <Authors>Greg Stefanowich</Authors>
+        <Description>An Extension library for dealing with Services and DependencyInjection</Description>
+        
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageProjectUrl>https://github.com/GStefanowich/service-extensions</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/GStefanowich/service-extensions</RepositoryUrl>
+        <PackageTags>services</PackageTags>
+        <NeutralLanguage>en</NeutralLanguage>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+</Project>
