@@ -30,5 +30,73 @@ namespace TheElm.Services {
             // Add a way to directly get the current copy of the class
             collection.AddTransient<T>(services => services.GetRequiredOptions<T>());
         }
+        
+        #region Service Injections
+        
+        /// <summary>
+        /// Registers an action used to configure a particular type of options. Note: These are run before all
+        /// </summary>
+        /// <param name="collection">The <see cref="IServiceCollection"/> to add the services to</param>
+        /// <param name="configureOptions">The action used to configure the options</param>
+        /// <typeparam name="TOptions">The options type to be configured</typeparam>
+        /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained</returns>
+        public static IServiceCollection Configure<TOptions>( this IServiceCollection collection, Action<TOptions, IServiceProvider> configureOptions ) where TOptions : class
+            => collection.Configure(Options.DefaultName, configureOptions);
+        
+        /// <summary>
+        /// Registers an action used to configure a particular type of options. Note: These are run before all
+        /// </summary>
+        /// <param name="collection">The <see cref="IServiceCollection"/> to add the services to</param>
+        /// <param name="name">The name of the options instances</param>
+        /// <param name="configureOptions">The action used to configure the options</param>
+        /// <typeparam name="TOptions">The options type to be configured</typeparam>
+        /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained</returns>
+        public static IServiceCollection Configure<TOptions>( this IServiceCollection collection, string? name, Action<TOptions, IServiceProvider> configureOptions ) where TOptions : class
+            => collection.AddOptions()
+                .AddSingleton<IConfigureOptions<TOptions>>(services => new ConfigureNamedOptions<TOptions>(name, options => configureOptions(options, services)));
+        
+        /// <summary>
+        /// Registers an action used to configure all instances of a particulate type of options
+        /// </summary>
+        /// <param name="collection">The <see cref="IServiceCollection"/> to add the services to</param>
+        /// <param name="configureOptions">The action used to configure the options</param>
+        /// <typeparam name="TOptions">The options type to be configured</typeparam>
+        /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained</returns>
+        public static IServiceCollection ConfigureAll<TOptions>( this IServiceCollection collection, Action<TOptions, IServiceProvider> configureOptions ) where TOptions : class
+            => collection.Configure(name: null, configureOptions: configureOptions);
+        
+        /// <summary>
+        /// Registers an action used to initialize a particular type of options. Note: These are run after all.
+        /// </summary>
+        /// <param name="collection">The <see cref="IServiceCollection"/> to add the services to</param>
+        /// <param name="configureOptions">The action used to configure the options</param>
+        /// <typeparam name="TOptions">The options type to be configured</typeparam>
+        /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained</returns>
+        public static IServiceCollection PostConfigure<TOptions>( this IServiceCollection collection, Action<TOptions, IServiceProvider> configureOptions ) where TOptions : class
+            => collection.PostConfigure(Options.DefaultName, configureOptions);
+        
+        /// <summary>
+        /// Registers an action used to initialize a particular type of options. Note: These are run after all.
+        /// </summary>
+        /// <param name="collection">The <see cref="IServiceCollection"/> to add the services to</param>
+        /// <param name="name"></param>
+        /// <param name="configureOptions"></param>
+        /// <typeparam name="TOptions">The options type to be configured</typeparam>
+        /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained</returns>
+        public static IServiceCollection PostConfigure<TOptions>( this IServiceCollection collection, string? name, Action<TOptions, IServiceProvider> configureOptions ) where TOptions : class
+            => collection.AddOptions()
+                .AddSingleton<IPostConfigureOptions<TOptions>>(services => new PostConfigureOptions<TOptions>(name, options => configureOptions(options, services)));
+        
+        /// <summary>
+        /// Registers an action used to post configure all instances of a particular type of options. Note: These are run after all.
+        /// </summary>
+        /// <param name="collection">The <see cref="IServiceCollection"/> to add the services to</param>
+        /// <param name="configureOptions"></param>
+        /// <typeparam name="TOptions">The options type to be configured</typeparam>
+        /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained</returns>
+        public static IServiceCollection PostConfigureAll<TOptions>( this IServiceCollection collection, Action<TOptions, IServiceProvider> configureOptions ) where TOptions : class
+            => collection.PostConfigure(name: null, configureOptions: configureOptions);
+        
+        #endregion
     }
 }
